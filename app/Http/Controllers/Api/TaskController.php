@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\TaskStatusEnum;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Services\TaskService;
@@ -11,6 +12,7 @@ use App\Http\Resources\TaskResource;
 use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Requests\Api\Task\StoreTaskRequest;
 use App\Http\Requests\Api\Task\UpdateTaskRequest;
+use App\Http\Requests\Api\Task\UpdateTaskStatusRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 
 class TaskController extends Controller implements HasMiddleware
@@ -76,6 +78,19 @@ class TaskController extends Controller implements HasMiddleware
 
         return response()->json([
             'message' => 'Task deleted successfully',
+        ]);
+    }
+
+    public function updateStatus(UpdateTaskStatusRequest $request, int $id)
+    {
+        $task = $this->taskService->getTaskById($id);
+        $this->authorize('update', $task);
+
+        $status = TaskStatusEnum::getObj($request->status);
+        $this->taskService->changeStatus($task, $status);
+
+        return response()->json([
+            'message' => 'Task status updated successfully',
         ]);
     }
 

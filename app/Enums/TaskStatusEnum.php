@@ -16,4 +16,14 @@ enum TaskStatusEnum: string
             self::Canceled => 'Canceled',
         };
     }
+
+    public static function getObj(string $status): TaskStatusEnum|null
+    {
+        return match ($status) {
+            'pending' => self::Pending,
+            'completed' => self::Completed,
+            'canceled' => self::Canceled,
+            default => null,
+        };
+    }
 }

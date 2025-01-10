@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\TaskStatusEnum;
 use App\Models\Task;
 
 class TaskService
@@ -30,5 +31,11 @@ class TaskService
     public function deleteTask(Task $task): void
     {
         $task->delete();
+    }
+
+    public function changeStatus(Task $task, TaskStatusEnum $status): Task
+    {
+        $task->update(['status' => $status->value]);
+        return $task;
     }
 }
