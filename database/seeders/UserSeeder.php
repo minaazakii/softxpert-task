@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         $userRole = Role::where('name', 'user')->first();
 
         $manager = User::updateOrCreate([
-            'email' => 'manger@mail.com'
+            'email' => 'manager@mail.com'
         ], [
             'name' => 'Manager',
             'email' => 'manger@mail.com',
