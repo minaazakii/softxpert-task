@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Services\TaskService;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Task\AddDependenciesToTaskRequest;
 use App\Http\Requests\Api\Task\AssignUserToTaskRequest;
 use App\Http\Resources\TaskResource;
 use Illuminate\Routing\Controllers\Middleware;
@@ -26,7 +27,12 @@ class TaskController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware(middleware: 'role:manager', only: ['index', 'create', 'destroy', 'assignUserToTask']),
+            new Middleware(middleware: 'role:manager', only: [
+                'index',
+                'store',
+                'destroy',
+                'assignUserToTask'
+            ]),
         ];
 
     }
@@ -95,11 +101,27 @@ class TaskController extends Controller implements HasMiddleware
         $task = $this->taskService->getTaskById($id);
         $this->authorize('update', $task);
 
+        if ($request->status == TaskStatusEnum::Completed->value && !$task->canMarkAsCompleted()) {
+            return response()->json([
+                'message' => 'Cant Change Status To Completed Since Some Task dependencies are not completed yet',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         $status = TaskStatusEnum::getObj($request->status);
         $this->taskService->changeStatus($task, $status);
 
         return response()->json([
             'message' => 'Task status updated successfully',
+        ]);
+    }
+
+    public function addDependenciesToTask(AddDependenciesToTaskRequest $request, int $id)
+    {
+        $task = $this->taskService->getTaskById($id);
+        $this->taskService->addDependenciesToTask($task, $request->dependencies_tasks_ids);
+
+        return response()->json([
+            'message' => 'Task dependencies Added successfully',
         ]);
     }
 

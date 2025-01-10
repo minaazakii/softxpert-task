@@ -44,4 +44,15 @@ class TaskService
         $task->update(['user_id' => $userId]);
         return $task;
     }
+
+    public function addDependenciesToTask(Task $task, array $dependencies_ids): Task
+    {
+        //Remove the task id from the dependencies array if it exists in the dependencies array
+        if (in_array($task->id, $dependencies_ids)) {
+            $dependencies_ids = array_diff($dependencies_ids, [$task->id]);
+        }
+
+        $task->dependencies()->syncWithoutDetaching($dependencies_ids);
+        return $task;
+    }
 }

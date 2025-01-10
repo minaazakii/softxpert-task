@@ -17,4 +17,5 @@ Route::middleware('auth:sanctum')
     ->group(function () {
         Route::put('/{task}/status', [TaskController::class, 'updateStatus']);
         Route::put('/{task}/assign-user', [TaskController::class, 'assignUserToTask']);
+        Route::post('/{task}/dependencies', [TaskController::class, 'addDependenciesToTask']);
     });
