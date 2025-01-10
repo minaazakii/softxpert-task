@@ -70,6 +70,12 @@ class TaskController extends Controller implements HasMiddleware
         $task = $this->taskService->getTaskById($id);
         $this->authorize('update', $task);
 
+        if ($request->user_id && !auth()->user()->hasRole('manager')) {
+            return response()->json([
+                'message' => 'Only Managers can assign users to tasks',
+            ], Response::HTTP_FORBIDDEN);
+        }
+
         $task = $this->taskService->updateTask($task, $request->validated());
 
         return response()->json([
