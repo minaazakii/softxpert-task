@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete(); // In case Task Can Be Created Then Assigned To User
+            $table->foreignId('user_id')->comment('Assigned User')->nullable()->constrained()->nullOnDelete(); // In case Task Can Be Created Then Assigned To User
             $table->string('title');
             $table->text('description');
             $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');
