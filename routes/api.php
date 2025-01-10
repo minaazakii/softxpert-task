@@ -11,7 +11,10 @@ Route::prefix('auth')
     });
 
 
+Route::apiResource('/tasks', TaskController::class)->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')
+    ->prefix('tasks')
     ->group(function () {
-        Route::apiResource('/tasks', TaskController::class);
+        Route::put('/{task}/status', [TaskController::class, 'updateStatus']);
+        Route::put('/{task}/assign-user', [TaskController::class, 'assignUserToTask']);
     });

@@ -38,4 +38,10 @@ class TaskService
         $task->update(['status' => $status->value]);
         return $task;
     }
+
+    public function assignUserToTask(Task $task, int $userId): Task
+    {
+        $task->update(['user_id' => $userId]);
+        return $task;
+    }
 }
