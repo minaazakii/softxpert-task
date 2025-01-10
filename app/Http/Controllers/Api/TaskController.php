@@ -37,9 +37,10 @@ class TaskController extends Controller implements HasMiddleware
 
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = $this->taskService->getTasks();
+        $filters = $request->query();
+        $tasks = $this->taskService->getTasks($filters);
 
         return response()->json([
             'tasks' => TaskResource::collection($tasks),

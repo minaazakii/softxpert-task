@@ -14,14 +14,19 @@ class TaskResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $routeNamesToShowDependencies = [
+            'tasks.show',
+        ];
+
         return [
             'id' => $this->id,
             'user' => new UserResource($this->user),
             'title' => $this->title,
             'description' => $this->description,
-            'start_date' => $this->start_date,
-            'due_date' => $this->due_date,
+            'start_date' => $this->start_date->format('Y-m-d'),
+            'due_date' => $this->due_date->format('Y-m-d'),
             'status' => $this->status,
+            'dependencies' => $this->when(in_array($request->route()->getName(), $routeNamesToShowDependencies), TaskResource::collection($this->dependencies)),
         ];
     }
 }

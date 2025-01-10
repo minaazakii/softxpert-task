@@ -7,9 +7,20 @@ use App\Models\Task;
 
 class TaskService
 {
-    public function getTasks()
+    public function getTasks($filters = [])
     {
-        return Task::with('user')->get();
+        $query = Task::query()->when(isset($filters['status']), function ($query) use ($filters) {
+            return $query->where('status', $filters['status']);
+
+        })->when(isset($filters['user_id']), function ($query) use ($filters) {
+            return $query->where('user_id', $filters['user_id']);
+        })->when(isset($filters['start_date']), function ($query) use ($filters) {
+            return $query->where('start_date', $filters['start_date']);
+        })->when(isset($filters['due_date']), function ($query) use ($filters) {
+            return $query->where('due_date', $filters['due_date']);
+        });
+
+        return $query->get();
     }
 
     public function getTaskById(int $id): Task
