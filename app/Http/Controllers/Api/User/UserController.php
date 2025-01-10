@@ -9,9 +9,12 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function userTasks()
+    public function userTasks(Request $request)
     {
-        $tasks = (new TaskService)->getTasks(['user_id' => auth()->id()]);
+        $filters = $request->except('user_id');
+        $filters['user_id'] = auth()->id();
+        $tasks = (new TaskService)->getTasks($filters);
+        
         return response()->json([
             'tasks' => TaskResource::collection($tasks),
         ]);
