@@ -5,6 +5,9 @@ This Task is a RESTful API for a Task Management System, designed to provide rob
 
 `Used Spatie Permission to Provide Role-based access control based`
 
+`Note:` Only the roles and model_has_roles tables were used since permissions were not needed for this task. These are the only tables shown in the ERD.
+
+
 `Used Laravel Sanctum For User Authentication`
 
 
